@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+*.egg-info/
+dist/
+.pytest_cache/
+.coverage
+coverage.xml
+htmlcov/
+
+# Relatórios gerados
+reports/
+
+# Variáveis de ambiente
+.env
+
+# IDE
+.vscode/
+.idea/
+
+# Docker
+*.log
