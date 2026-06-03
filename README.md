@@ -85,10 +85,10 @@ O pipeline roda automaticamente a cada `push` na branch `main`:
 ```
 push → main
     │
-    ├── 🧪 test    → pytest + cobertura de código
-    ├── 🔍 lint    → flake8
-    ├── 🐳 build   → Docker image → GitHub Container Registry (ghcr.io)
-    └── 📊 run     → Executa container e salva relatórios como artefato
+    ├──  test    → pytest + cobertura de código
+    ├──  lint    → flake8
+    ├──  build   → Docker image → GitHub Container Registry (ghcr.io)
+    └──  run     → Executa container e salva relatórios como artefato
 ```
 
 ---
