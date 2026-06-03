@@ -203,5 +203,6 @@ def generate_pdf(data: dict, path: str):
         )
     )
 
+    
     doc.build(elements)
     log.info(f"PDF salvo: {path}")
