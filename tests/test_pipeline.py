@@ -88,5 +88,6 @@ def test_generate_pdf(processed, tmp_path):
     path = str(tmp_path / "test.pdf")
     generate_pdf(processed, path)
 
-    assert os.path.exists(path)
+   
+        assert os.path.exists(path)
     assert os.path.getsize(path) > 2000
