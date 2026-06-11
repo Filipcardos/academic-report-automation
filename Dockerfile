@@ -1,43 +1,31 @@
-# ── Build stage ────────────────────────────────────────────────────────────────
-FROM python:3.11-slim AS builder
+# ─────────────────────────────────────────────────────────────
+# Academic Report Automation
+# ─────────────────────────────────────────────────────────────
+
+FROM python:3.11-slim
 
 WORKDIR /app
 
-# Dependências do sistema para pyodbc (ODBC Driver)
+# Dependências necessárias para Excel e PDF
 RUN apt-get update && apt-get install -y --no-install-recommends \
-        gcc g++ unixodbc-dev curl gnupg \
-    && curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - \
-    && curl https://packages.microsoft.com/config/debian/11/prod.list \
-        > /etc/apt/sources.list.d/mssql-release.list \
-    && apt-get update \
-    && ACCEPT_EULA=Y apt-get install -y msodbcsql18 \
+    gcc \
     && rm -rf /var/lib/apt/lists/*
 
+# Instalar dependências Python
 COPY requirements.txt .
-RUN pip install --no-cache-dir --user -r requirements.txt
 
+RUN pip install --no-cache-dir -r requirements.txt
 
-# ── Runtime stage ───────────────────────────────────────────────────────────────
-FROM python:3.11-slim AS runtime
-
-WORKDIR /app
-
-# Copiar ODBC e libs do builder
-COPY --from=builder /root/.local /root/.local
-COPY --from=builder /usr/lib/x86_64-linux-gnu /usr/lib/x86_64-linux-gnu
-COPY --from=builder /opt/microsoft /opt/microsoft
-COPY --from=builder /etc/odbcinst.ini /etc/odbcinst.ini
-
-# Código fonte
+# Copiar código
 COPY src/ ./src/
 
 # Diretório de saída
 RUN mkdir -p /app/reports
 
-# Variáveis de ambiente (sobrescreva via docker run -e ou .env)
-ENV USE_SEED=true \
-    OUTPUT_DIR=/app/reports \
-    PYTHONUNBUFFERED=1 \
-    PATH="/root/.local/bin:$PATH"
+# Variáveis de ambiente
+ENV USE_SEED=true
+ENV OUTPUT_DIR=/app/reports
+ENV PYTHONUNBUFFERED=1
+ENV PYTHONPATH=/app/src
 
 CMD ["python", "src/main.py"]
