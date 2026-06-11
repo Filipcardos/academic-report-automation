@@ -80,9 +80,10 @@ def test_generate_excel(processed, tmp_path):
     assert os.path.exists(path)
     assert os.path.getsize(path) > 5000
 
-
 # ── Reporter PDF ────────────────────────────────────────────────────────
 def test_generate_pdf(processed, tmp_path):
+    from reporter_pdf import generate_pdf
+
     path = str(tmp_path / "test.pdf")
 
     generate_pdf(processed, path)
