@@ -10,13 +10,13 @@
 
 ---
 
-## 🎯 Objetivo
+##  Objetivo
 
 Automatizar a geração periódica de relatórios acadêmicos (alunos, notas, matrículas) eliminando trabalho manual, garantindo rastreabilidade e entregando insights visuais para a gestão institucional.
 
 ---
 
-## 🏗️ Arquitetura
+##  Arquitetura
 
 ```
 SQL Server 2022
@@ -35,7 +35,7 @@ SQL Server 2022
 
 ---
 
-## 🚀 Como rodar
+##  Como rodar
 
 ### Pré-requisitos
 - [Docker Desktop](https://www.docker.com/products/docker-desktop/) instalado
@@ -69,7 +69,7 @@ docker run --rm \
 
 ---
 
-## 🧪 Testes
+##  Testes
 
 ```bash
 pip install openpyxl reportlab pytest pytest-cov
@@ -78,7 +78,7 @@ USE_SEED=true PYTHONPATH=src pytest tests/ -v --cov=src
 
 ---
 
-## ⚙️ CI/CD — GitHub Actions
+##  CI/CD — GitHub Actions
 
 O pipeline roda automaticamente a cada `push` na branch `main`:
 
