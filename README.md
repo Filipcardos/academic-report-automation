@@ -1,4 +1,4 @@
-# 📊 Academic Report Automation
+#  Academic Report Automation
 
 > Pipeline de automação que extrai dados acadêmicos do **SQL Server**, transforma indicadores e gera relatórios profissionais em **Excel** e **PDF** — containerizado com **Docker** e com **CI/CD via GitHub Actions**.
 
@@ -93,7 +93,7 @@ push → main
 
 ---
 
-## 📁 Estrutura do projeto
+##  Estrutura do projeto
 
 ```
 academic-report-automation/
@@ -119,7 +119,7 @@ academic-report-automation/
 
 ---
 
-## 🛠️ Stack
+##  Stack
 
 | Tecnologia | Uso |
 |---|---|
@@ -134,7 +134,7 @@ academic-report-automation/
 
 ---
 
-## 👤 Autor
+##  Autor
 
 **Filipe Oliveira Cardoso**
-[LinkedIn](https://linkedin.com/in/filipe-cardoso-919532205) • [GitHub](https://github.com/Filipcardos)
+[LinkedIn](https://linkedin.com/in/filipcardos) • [GitHub](https://github.com/Filipcardos)
