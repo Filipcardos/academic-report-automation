@@ -42,7 +42,7 @@ SQL Server 2022
 
 ### 1. Clone o repositório
 ```bash
-git clone https://github.com/SEU_USUARIO/academic-report-automation.git
+git clone https://github.com/Filipcardos/academic-report-automation.git
 cd academic-report-automation
 ```
 
