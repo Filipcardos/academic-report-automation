@@ -1,0 +1,19 @@
+<!doctype html><html lang="pt-BR"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Relatório acadêmico · Filipe Cardoso</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f6f5ef;color:#192d2a;font:16px system-ui,sans-serif}main{max-width:960px;margin:auto;padding:0 clamp(20px,5vw,60px) 48px}header,footer,.toolbar,.actions{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap}header{padding:24px 0;border-bottom:1px solid #b5c0b6}a{color:inherit}header b{letter-spacing:-.03em}h1{font:clamp(44px,7vw,80px)/1.06 Georgia,serif;letter-spacing:-.06em;margin:42px 0 12px}p{line-height:1.55;color:#44534c}.toolbar{margin:28px 0}.actions a,select{font:inherit;border:1px solid #8b9d8f;border-radius:4px;padding:9px 15px;text-decoration:none;background:transparent}.actions a:first-child{background:#1e443a;color:white}.metrics{display:flex;gap:clamp(24px,8vw,90px);border-block:1px solid #b5c0b6;padding:21px 0}.metrics b{display:block;font:38px Georgia,serif}small,footer{color:#536158}h2{font-size:19px;margin-top:30px}table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums}th,td{text-align:right;padding:12px 4px;border-bottom:1px solid #d1d5ca}th{font-size:12px;color:#57685b}th:first-child,td:first-child{text-align:left}footer{margin-top:32px;font-size:13px}select:focus-visible,a:focus-visible{outline:3px solid #348061}
+</style><main><header><b>Indicadores acadêmicos</b><small>Demonstração com dados fictícios</small></header><h1>Desempenho por curso</h1><p>Consulte as médias por disciplina e baixe o relatório do curso selecionado.</p><div class="toolbar"><label>Curso &nbsp;<select id="curso"></select></label><div class="actions"><a id="xlsx" download>Baixar Excel ↓</a><a id="pdf" download>Baixar PDF ↓</a></div></div><div class="metrics" aria-live="polite"><div><small>Alunos</small><b id="alunos"></b></div><div><small>Média geral · de 0 a 10</small><b id="media"></b></div></div><h2>Disciplinas</h2><table><thead><tr><th>Disciplina</th><th>Alunos</th><th>Média</th><th>Aprovação</th></tr></thead><tbody></tbody></table><footer><span>Filipe Oliveira Cardoso</span><a href="https://github.com/Filipcardos/academic-report-automation">Código no GitHub ↗</a></footer></main>
+<script>
+const reports=__DATA__;
+const select=document.querySelector('select');
+const number=(n)=>n.toLocaleString('pt-BR',{maximumFractionDigits:2});
+for(const [i,r] of reports.entries())select.add(new Option(r.curso,String(i)));
+function render(){
+  const r=reports[Number(select.value)];
+  document.querySelector('#media').textContent=number(r.media_geral);
+  document.querySelector('#alunos').textContent=r.total_alunos;
+  for(const ext of ['xlsx','pdf'])document.getElementById(ext).href=r.arquivo+'.'+ext;
+  const table=document.querySelector('tbody');table.replaceChildren();
+  for(const d of r.por_disciplina){const tr=table.insertRow();for(const v of [d.disciplina,d.total,number(d.media),number(d.taxa_aprovacao)+'%'])tr.insertCell().textContent=v;}
+}
+select.addEventListener('change',render);render();
+</script></html>

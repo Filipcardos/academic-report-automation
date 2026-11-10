@@ -1,0 +1,6 @@
+{
+  "framework": null,
+  "installCommand": "",
+  "buildCommand": "python3 -m pip install --target /tmp/academic-report-deps openpyxl reportlab && PYTHONPATH=/tmp/academic-report-deps python3 demo/build.py",
+  "outputDirectory": "demo/public"
+}
