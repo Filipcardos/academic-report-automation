@@ -1,141 +1,40 @@
-#  Academic Report Automation
+# Academic Report Automation
 
-> Pipeline de automação que extrai dados acadêmicos do **SQL Server**, transforma indicadores e gera relatórios profissionais em **Excel** e **PDF** — containerizado com **Docker** e com **CI/CD via GitHub Actions**.
+**[Abrir demonstração na Vercel ↗](https://academic-report-automation.vercel.app)**
 
-![CI/CD](https://github.com/Filipcardos/academic-report-automation/actions/workflows/ci-cd.yml/badge.svg)
-![Python](https://img.shields.io/badge/Python-3.11-blue?logo=python)
-![SQL Server](https://img.shields.io/badge/SQL%20Server-2022-CC2927?logo=microsoftsqlserver)
-![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?logo=docker)
-![License](https://img.shields.io/badge/license-MIT-green)
+Escolha um curso para consultar a média das notas e a taxa de aprovação por disciplina. Os mesmos indicadores estão disponíveis em uma planilha Excel para análise e em um PDF para compartilhar.
 
----
+A demonstração usa dados fictícios de 80 alunos de Medicina, Enfermagem, Fisioterapia e Farmácia. Experimente selecionar **Medicina** e baixar a planilha: as abas **Dashboard**, **Por Curso**, **Por Disciplina** e **Alunos** passam a mostrar apenas esse recorte.
 
-##  Objetivo
+## Como funciona
 
-Automatizar a geração periódica de relatórios acadêmicos (alunos, notas, matrículas) eliminando trabalho manual, garantindo rastreabilidade e entregando insights visuais para a gestão institucional.
+O módulo de extração em Python lê alunos, notas e matrículas do SQL Server ou gera uma base fictícia. O módulo de transformação calcula os indicadores. O Excel é gerado com openpyxl e o PDF com ReportLab.
 
----
+Na Vercel, [o script de publicação](demo/build.py) prepara a página e os arquivos a partir da base fictícia. Cada curso tem seu próprio par de relatórios, além da opção **Todos os cursos**.
 
-##  Arquitetura
+## Executar a demonstração localmente
 
-```
-SQL Server 2022
-      │
-      ▼
- extractor.py  ──►  transformer.py  ──►  reporter_excel.py  ──►  .xlsx
-                                    └──►  reporter_pdf.py   ──►  .pdf
-```
-
-| Camada | Responsabilidade |
-|--------|-----------------|
-| **Extractor** | Conecta ao SQL Server via `pyodbc`, executa queries parametrizadas |
-| **Transformer** | Limpa dados, calcula médias, taxas de aprovação e agrupa por curso/disciplina |
-| **Reporter Excel** | Gera `.xlsx` com 4 abas, gráficos e formatação profissional (`openpyxl`) |
-| **Reporter PDF** | Gera `.pdf` formatado com tabelas e indicadores (`ReportLab`) |
-
----
-
-##  Como rodar
-
-### Pré-requisitos
-- [Docker Desktop](https://www.docker.com/products/docker-desktop/) instalado
-
-### 1. Clone o repositório
-```bash
-git clone https://github.com/Filipcardos/academic-report-automation.git
-cd academic-report-automation
-```
-
-### 2. Configure as variáveis de ambiente
-```bash
-cp .env.example .env
-# Edite .env com sua senha do SQL Server se necessário
-```
-
-### 3. Suba os containers
-```bash
-docker compose up --build
-```
-
-Os relatórios serão gerados na pasta `reports/` com timestamp no nome.
-
-### 4. Modo demonstração (sem SQL Server)
-```bash
-docker build -t academic-report-automation .
-docker run --rm \
-  -e USE_SEED=true \
-  -v "$PWD/reports:/app/reports" \
-  academic-report-automation
-```
-
----
-
-##  Testes
+Na raiz do repositório, com Python 3.11:
 
 ```bash
-pip install openpyxl reportlab pytest pytest-cov
-USE_SEED=true PYTHONPATH=src pytest tests/ -v --cov=src
+python -m pip install openpyxl reportlab
+python demo/build.py
+python -m http.server 8000 --directory demo/public
 ```
 
----
+Abra [localhost:8000](http://localhost:8000). A página, as planilhas e os PDFs ficam em `demo/public/`.
 
-##  CI/CD — GitHub Actions
+## Integração com SQL Server
 
-O pipeline roda automaticamente a cada `push` na branch `main`:
+As consultas estão em [src/extractor.py](src/extractor.py) e o esquema de exemplo em [data/init.sql](data/init.sql). Para usar o extrator com um banco próprio, configure `USE_SEED=false`, `DB_SERVER`, `DB_NAME`, `DB_USER` e `DB_PASSWORD` no ambiente do processo. Essa modalidade requer o pacote `pyodbc` e o ODBC Driver 18 for SQL Server.
 
-```
-push → main
-    │
-    ├──  test    → pytest + cobertura de código
-    ├──  lint    → flake8
-    ├──  build   → Docker image → GitHub Container Registry (ghcr.io)
-    └──  run     → Executa container e salva relatórios como artefato
-```
+## Testes
 
----
+Na raiz do projeto:
 
-##  Estrutura do projeto
-
-```
-academic-report-automation/
-├── src/
-│   ├── main.py              # Orquestrador do pipeline
-│   ├── extractor.py         # Conexão SQL Server + seed de dados
-│   ├── transformer.py       # Cálculo de indicadores
-│   ├── reporter_excel.py    # Gerador .xlsx
-│   └── reporter_pdf.py      # Gerador .pdf
-├── tests/
-│   └── test_pipeline.py     # Testes unitários
-├── data/
-│   └── init.sql             # Schema + dados iniciais SQL Server
-├── .github/
-│   └── workflows/
-│       └── ci-cd.yml        # Pipeline GitHub Actions
-├── Dockerfile
-├── docker-compose.yml
-├── requirements.txt
-├── .env.example
-└── README.md
+```bash
+python -m pip install openpyxl reportlab pytest
+python -m pytest -o pythonpath=src tests/ -q
 ```
 
----
-
-##  Stack
-
-| Tecnologia | Uso |
-|---|---|
-| Python 3.11 | Linguagem principal |
-| SQL Server 2022 | Banco de dados relacional |
-| pyodbc | Conector SQL Server |
-| openpyxl | Geração de Excel com gráficos |
-| ReportLab | Geração de PDF |
-| Docker + Compose | Containerização |
-| GitHub Actions | CI/CD automatizado |
-| pytest | Testes unitários |
-
----
-
-##  Autor
-
-**Filipe Oliveira Cardoso**
-[LinkedIn](https://linkedin.com/in/filipcardos) • [GitHub](https://github.com/Filipcardos)
+**Filipe Oliveira Cardoso** · [GitHub](https://github.com/Filipcardos) · [LinkedIn](https://www.linkedin.com/in/filipe-cardoso-919532205/)
