@@ -61,9 +61,10 @@ Os relatórios serão gerados na pasta `reports/` com timestamp no nome.
 
 ### 4. Modo demonstração (sem SQL Server)
 ```bash
+docker build -t academic-report-automation .
 docker run --rm \
   -e USE_SEED=true \
-  -v $(pwd)/reports:/app/reports \
+  -v "$PWD/reports:/app/reports" \
   academic-report-automation
 ```
 
